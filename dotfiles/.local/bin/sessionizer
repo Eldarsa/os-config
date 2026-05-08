@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+# Pick a project directory via fzf, then attach (or create) a tmux session
+# named after it. Originally inspired by ThePrimeagen's tmux-sessionizer.
+#
+# Bindings:
+#   tmux:   prefix + f  (see .tmux.conf)
+#   shell:  Ctrl-f      (see .zshrc)
+
+set -euo pipefail
+
+if [ $# -eq 1 ]; then
+  selected="$1"
+else
+  # Adjust this find to match how you organize repos.
+  # Prunes node_modules and .git so they don't pollute the picker.
+  selected=$(
+    find ~/code -mindepth 1 -maxdepth 3 \
+      \( -name node_modules -o -name .git \) -prune -o \
+      -type d -print 2>/dev/null \
+    | fzf
+  )
+fi
+
+[ -z "$selected" ] && exit 0
+
+selected_name=$(basename "$selected" | tr . _)
+tmux_running=$(pgrep tmux 2>/dev/null || true)
+
+# No tmux server yet → start one and attach.
+if [ -z "${TMUX:-}" ] && [ -z "$tmux_running" ]; then
+  tmux new-session -s "$selected_name" -c "$selected"
+  exit 0
+fi
+
+# Create the session detached if it doesn't exist.
+if ! tmux has-session -t="$selected_name" 2>/dev/null; then
+  tmux new-session -ds "$selected_name" -c "$selected"
+fi
+
+# Attach (from outside tmux) or switch (from inside tmux).
+if [ -z "${TMUX:-}" ]; then
+  tmux attach-session -t "$selected_name"
+else
+  tmux switch-client -t "$selected_name"
+fi

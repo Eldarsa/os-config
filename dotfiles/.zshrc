@@ -45,6 +45,14 @@ alias gl='git log --oneline --graph --decorate -20'
 command -v mise >/dev/null && eval "$(mise activate zsh)"
 # direnv: auto-load .envrc env vars per directory.
 command -v direnv >/dev/null && eval "$(direnv hook zsh)"
+# fzf: Ctrl-R history search, Ctrl-T file picker, Alt-C cd-into-dir
+[ -f /usr/share/doc/fzf/examples/key-bindings.zsh ] && \
+  source /usr/share/doc/fzf/examples/key-bindings.zsh
+[ -f /usr/share/doc/fzf/examples/completion.zsh ] && \
+  source /usr/share/doc/fzf/examples/completion.zsh
+# Sessionizer: Ctrl-f → fzf-pick a project and jump to its tmux session.
+# (Overrides readline's forward-char on Ctrl-f; use right-arrow instead.)
+bindkey -s '^f' 'sessionizer\n'
 
 # ---- environment -----------------------------------------------------------
 # Pick the best available editor (nvim wins; fall back to vim, then nano).
