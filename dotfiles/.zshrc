@@ -43,6 +43,8 @@ alias gl='git log --oneline --graph --decorate -20'
 # ---- tool integrations -----------------------------------------------------
 # mise: auto-switch language runtimes per directory.
 command -v mise >/dev/null && eval "$(mise activate zsh)"
+# direnv: auto-load .envrc env vars per directory.
+command -v direnv >/dev/null && eval "$(direnv hook zsh)"
 
 # ---- environment -----------------------------------------------------------
 # Pick the best available editor (nvim wins; fall back to vim, then nano).

@@ -1,0 +1,15 @@
+# Skills installed via the `skills` CLI (https://skills.sh).
+# Read by install/60-claude-skills.sh on bootstrap.
+#
+# Format per line:  <skill-name>  <owner/repo>
+# Comments (#) and blank lines ignored.
+#
+# Plugin-provided skills do NOT belong here — declare them in the
+# enabledPlugins block of settings.json instead. Skills you've authored
+# yourself go in dotfiles/.claude/skills/<name>/ and are linked, not installed.
+
+find-skills           vercel-labs/skills
+analytics-tracking    coreyhaines31/marketingskills
+page-cro              coreyhaines31/marketingskills
+seo-audit             coreyhaines31/marketingskills
+email-best-practices  resend/email-best-practices
