@@ -16,3 +16,7 @@ link_dotfile .config/mise/config.toml .config/mise/config.toml
 
 log "installing tools declared in global mise config"
 mise install
+
+# Expose mise-installed tools (node, npm, ...) to later install steps in this
+# same bootstrap run. .zshrc's `mise activate` only fires in interactive shells.
+export PATH="$HOME/.local/share/mise/shims:$PATH"
