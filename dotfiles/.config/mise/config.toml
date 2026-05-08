@@ -1,0 +1,5 @@
+# Global mise config — symlinked from os-config/dotfiles/.config/mise/config.toml
+# Per-project versions live in each repo's own .mise.toml.
+
+[tools]
+node = "lts"

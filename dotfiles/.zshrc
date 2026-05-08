@@ -40,6 +40,10 @@ alias gl='git log --oneline --graph --decorate -20'
 # Add ~/.local/bin if it exists (used by pipx, mise shims, etc.)
 [ -d "$HOME/.local/bin" ] && export PATH="$HOME/.local/bin:$PATH"
 
+# ---- tool integrations -----------------------------------------------------
+# mise: auto-switch language runtimes per directory.
+command -v mise >/dev/null && eval "$(mise activate zsh)"
+
 # ---- local overrides -------------------------------------------------------
 # Anything machine-specific (API keys, host-specific paths) goes here, NOT in
 # the repo. This file is gitignored from the os-config repo's perspective
