@@ -1,0 +1,52 @@
+# ~/.gitconfig — symlinked from os-config/dotfiles/.gitconfig
+# Personal identity (name + email) lives in ~/.gitconfig.local, which is
+# included at the bottom and NOT committed to the repo.
+
+[init]
+    defaultBranch = main
+
+[pull]
+    rebase = true
+
+[push]
+    default = current
+    autoSetupRemote = true
+
+[fetch]
+    prune = true
+
+[rebase]
+    autoStash = true
+    autoSquash = true
+
+[merge]
+    conflictStyle = zdiff3
+
+[diff]
+    algorithm = histogram
+    colorMoved = zebra
+
+[rerere]
+    enabled = true
+
+[branch]
+    sort = -committerdate
+
+[color]
+    ui = auto
+
+[core]
+    autocrlf = input
+
+[alias]
+    s = status -sb
+    co = checkout
+    br = branch
+    cm = commit -m
+    lg = log --oneline --graph --decorate --all -20
+    last = log -1 HEAD --stat
+    unstage = reset HEAD --
+
+# Machine-specific identity + overrides. Created by install/10-git.sh.
+[include]
+    path = ~/.gitconfig.local
