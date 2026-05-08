@@ -44,6 +44,16 @@ alias gl='git log --oneline --graph --decorate -20'
 # mise: auto-switch language runtimes per directory.
 command -v mise >/dev/null && eval "$(mise activate zsh)"
 
+# ---- environment -----------------------------------------------------------
+# Pick the best available editor (nvim wins; fall back to vim, then nano).
+for _ed in nvim vim nano; do
+  if command -v "$_ed" >/dev/null; then
+    export EDITOR="$_ed" VISUAL="$_ed"
+    break
+  fi
+done
+unset _ed
+
 # ---- local overrides -------------------------------------------------------
 # Anything machine-specific (API keys, host-specific paths) goes here, NOT in
 # the repo. This file is gitignored from the os-config repo's perspective
