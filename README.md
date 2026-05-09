@@ -27,6 +27,7 @@ install/              # modular setup steps, numbered by category
   05-workspace.sh     # ~/code workspace directory
   10-git.sh           # git config + identity prompt + ed25519 SSH key
   10-shell.sh         # zsh + login shell switch + .zshrc link
+  12-btop.sh          # btop system monitor
   15-tmux.sh          # tmux + fzf + tpm + sessionizer
   20-mise.sh          # mise (runtime version manager) + Node LTS
   25-direnv.sh        # direnv (per-directory env vars)
