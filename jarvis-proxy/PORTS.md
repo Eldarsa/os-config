@@ -26,15 +26,6 @@ public-trust cert tailscale issues for `<host>.<tailnet>.ts.net`.
 | Morolapper backend | 3100 | 13100 | Python/uvicorn (Docker) |
 | nevy | 3020 | 13020 | Next.js (was 3000 — renumbered) |
 
-## Reserved ranges (informal)
-
-- **30xx** — Morolapper / nevy / smaller experiments
-- **31xx** — backends paired with the above
-- **40xx** — labelit & controlroom
-- **80xx** — pikazo backend
-
-Don't treat these as binding; treat the table above as binding.
-
 ## URL convention
 
 Local dev (any device, when SSH-tunneled or on the same machine):

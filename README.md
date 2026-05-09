@@ -32,15 +32,19 @@ install/              # modular setup steps, numbered by category
   25-direnv.sh        # direnv (per-directory env vars)
   30-docker.sh        # Docker engine + compose plugin + group membership
   35-firewall.sh      # ufw default-deny + SSH (limited) + tailscale interface
+  38-tailscale.sh     # tailscale + operator setup (auth still manual)
   40-neovim.sh        # neovim from upstream + LazyVim starter
   45-lazygit.sh       # lazygit from upstream
   50-claude-code.sh   # Claude Code via npm + user-level config link
+  55-jarvis-proxy.sh  # Caddy HTTPS reverse proxy fronting all dev servers
   60-claude-skills.sh # skills declared in skills.list, installed via skills CLI
+jarvis-proxy/         # Caddy config, cert refresh, port registry — see its README
 dotfiles/             # files symlinked into $HOME
   .zshrc              # shell config (sourced .zshrc.local at the end)
   .gitconfig          # shared git config (includes .gitconfig.local)
   .tmux.conf          # tmux config + tpm plugin declarations
   .local/bin/sessionizer    # tmux session picker (Ctrl-f / prefix+f)
+  .local/bin/jarvis-status  # jarvis-proxy health summary (caddy, cert, sites)
   .config/mise/config.toml  # global mise tool versions
   .claude/settings.json     # Claude Code permissions, plugins, prefs
   .claude/CLAUDE.md         # user-level memory
@@ -115,6 +119,8 @@ Some things can't be (or shouldn't be) automated. Do these once:
 | Step | What |
 |------|------|
 | **Add SSH key to GitHub** | `10-git.sh` prints the public key — paste it into GitHub SSH settings. |
+| **Authenticate Tailscale** | After `38-tailscale.sh` runs, `sudo tailscale up` once to join the tailnet. `55-jarvis-proxy.sh` is a no-op until this is done. |
+| **Enable HTTPS certs on the tailnet** | Tailscale admin console → DNS → "HTTPS Certificates" → Enable. Required for jarvis-proxy. One-time per tailnet. |
 | **Authenticate Claude Code** | First `claude` run needs OAuth. SSH into the VPS with `LocalForward` for the OAuth port (laptop-side `~/.ssh/config`), then run `claude` and complete login in your laptop browser. |
 | **Tmux plugins** | First tmux launch: `prefix + I` to install plugins via tpm. |
 | **Hetzner Cloud Firewall** | Configure in Hetzner Console: allow `22/tcp` and ICMP inbound, deny everything else. ufw is the inner layer; Hetzner is the outer. |
@@ -122,9 +128,16 @@ Some things can't be (or shouldn't be) automated. Do these once:
 
 ## Workflow notes
 
-- **Tailscale** handles connectivity to the VPS — `http://jarvis:3010` reaches
-  any dev server bound to that port. SSH port forwarding only needed for
-  OAuth flows (Claude Code login, OAuth-based MCPs).
+- **Tailscale + jarvis-proxy** handle connectivity. Local dev uses
+  `http://localhost:<port>` as usual. From any other tailnet device (laptop,
+  phone, iPad), use `https://jarvis.<tailnet>.ts.net:<port + 10000>` — Caddy
+  fronts every dev server with a real public-trust HTTPS cert, so secure-context
+  APIs (`crypto.subtle`, Service Workers, Clipboard, getUserMedia) work the
+  same as in production. See `jarvis-proxy/README.md` and `jarvis-proxy/PORTS.md`.
+  SSH port forwarding only needed for OAuth flows (Claude Code login, OAuth MCPs).
+- **`jarvis-status`** prints a one-shot health summary: Caddy state, cert
+  expiry days, configured sites, and which upstream listeners are alive.
+  Run it before debugging "why is this URL not loading?".
 - **Sessionizer** (`Ctrl-f` in shell, `prefix+f` in tmux) picks a project under
   `~/code` and attaches/switches to a tmux session named after it.
 - **mise + direnv** together make per-project state automatic: mise switches
