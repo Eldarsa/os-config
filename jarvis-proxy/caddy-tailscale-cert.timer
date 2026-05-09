@@ -1,0 +1,10 @@
+[Unit]
+Description=Daily check for tailscale cert renewal
+
+[Timer]
+OnBootSec=2min
+OnUnitActiveSec=24h
+Persistent=true
+
+[Install]
+WantedBy=timers.target

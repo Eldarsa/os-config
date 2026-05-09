@@ -1,0 +1,8 @@
+[Unit]
+Description=Refresh tailscale-issued cert for Caddy and reload if changed
+After=tailscaled.service caddy.service
+Wants=tailscaled.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/refresh-tailscale-cert.sh

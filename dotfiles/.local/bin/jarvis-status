@@ -1,0 +1,68 @@
+#!/usr/bin/env bash
+# One-shot health summary for the jarvis dev-preview proxy.
+# Shows: caddy state, cert expiry, configured sites, upstream listener health.
+set -uo pipefail
+
+bold=$'\033[1m'; dim=$'\033[2m'; green=$'\033[32m'; red=$'\033[31m'; yellow=$'\033[33m'; reset=$'\033[0m'
+
+# Caddy service
+if systemctl is-active --quiet caddy; then
+  caddy_state="${green}active${reset}"
+else
+  caddy_state="${red}inactive${reset}"
+fi
+caddy_since=$(systemctl show caddy --property=ActiveEnterTimestamp --value 2>/dev/null)
+printf "%scaddy%s            %b ${dim}(since %s)${reset}\n" "$bold" "$reset" "$caddy_state" "$caddy_since"
+
+# Cert expiry
+cert=/var/lib/caddy/jarvis.crt
+if [ -r "$cert" ]; then
+  end=$(sudo openssl x509 -in "$cert" -noout -enddate 2>/dev/null | cut -d= -f2)
+  end_epoch=$(date -d "$end" +%s 2>/dev/null || echo 0)
+  now=$(date +%s)
+  days=$(( (end_epoch - now) / 86400 ))
+  if   [ "$days" -lt 7  ]; then color="$red"
+  elif [ "$days" -lt 30 ]; then color="$yellow"
+  else                          color="$green"; fi
+  printf "%scert%s             expires in %b%s days%s ${dim}(%s)${reset}\n" "$bold" "$reset" "$color" "$days" "$reset" "$end"
+else
+  printf "%scert%s             %bmissing%s\n" "$bold" "$reset" "$red" "$reset"
+fi
+
+# Tailscale
+ts_host=$(tailscale status --json 2>/dev/null | jq -r '.Self.DNSName' 2>/dev/null | sed 's/\.$//')
+if [ -n "$ts_host" ] && [ "$ts_host" != "null" ]; then
+  printf "%stailnet%s          %b%s%s\n" "$bold" "$reset" "$green" "$ts_host" "$reset"
+else
+  printf "%stailnet%s          %bnot connected%s\n" "$bold" "$reset" "$red" "$reset"
+fi
+
+# Configured sites + upstream health
+caddyfile=/etc/caddy/Caddyfile
+if [ ! -r "$caddyfile" ]; then
+  printf "%ssites%s            %b/etc/caddy/Caddyfile not readable%s\n" "$bold" "$reset" "$red" "$reset"
+  exit 0
+fi
+
+# Parse "<host>:<https-port> { ... reverse_proxy 127.0.0.1:<local-port> }"
+mapfile -t mappings < <(awk '
+  /^[^[:space:]].+:[0-9]+ \{/ {
+    match($0, /:([0-9]+) \{/, a); https_port = a[1]
+  }
+  /reverse_proxy[[:space:]]+127\.0\.0\.1:[0-9]+/ {
+    match($0, /127\.0\.0\.1:([0-9]+)/, a); local_port = a[1]
+    if (https_port && local_port) print https_port " " local_port
+    https_port = ""; local_port = ""
+  }
+' "$caddyfile")
+
+printf "%ssites%s            %d configured\n" "$bold" "$reset" "${#mappings[@]}"
+for m in "${mappings[@]}"; do
+  https_port=${m%% *}
+  local_port=${m##* }
+  if (echo > /dev/tcp/127.0.0.1/"$local_port") >/dev/null 2>&1; then
+    printf "  %b✓%s :%s ${dim}→ 127.0.0.1:%s${reset}\n" "$green" "$reset" "$https_port" "$local_port"
+  else
+    printf "  %b✗%s :%s ${dim}→ 127.0.0.1:%s (no listener)${reset}\n" "$red" "$reset" "$https_port" "$local_port"
+  fi
+done

@@ -1,0 +1,66 @@
+# Jarvis HTTPS reverse proxy for tailnet dev previews.
+#
+# This file is a TEMPLATE. `__HOST__` is replaced by `install/55-jarvis-proxy.sh`
+# at install time using the value of `tailscale status --json | .Self.DNSName`.
+# Edit the template here, never the rendered /etc/caddy/Caddyfile directly.
+#
+# Convention: each dev service's HTTPS port = local port + 10000. See PORTS.md.
+
+{
+	auto_https off
+	admin off
+}
+
+(tls_jarvis) {
+	tls /var/lib/caddy/jarvis.crt /var/lib/caddy/jarvis.key
+}
+
+# ───────── labelit ─────────
+__HOST__:14070 {
+	import tls_jarvis
+	reverse_proxy 127.0.0.1:4070
+}
+
+__HOST__:14071 {
+	import tls_jarvis
+	reverse_proxy 127.0.0.1:4071
+}
+
+__HOST__:14080 {
+	import tls_jarvis
+	reverse_proxy 127.0.0.1:4080
+}
+
+# ───────── controlroom ─────────
+__HOST__:14000 {
+	import tls_jarvis
+	reverse_proxy 127.0.0.1:4000
+}
+
+# ───────── pikazo ─────────
+__HOST__:13070 {
+	import tls_jarvis
+	reverse_proxy 127.0.0.1:3070
+}
+
+__HOST__:18050 {
+	import tls_jarvis
+	reverse_proxy 127.0.0.1:8050
+}
+
+# ───────── Morolapper ─────────
+__HOST__:13010 {
+	import tls_jarvis
+	reverse_proxy 127.0.0.1:3010
+}
+
+__HOST__:13100 {
+	import tls_jarvis
+	reverse_proxy 127.0.0.1:3100
+}
+
+# ───────── nevy ─────────
+__HOST__:13020 {
+	import tls_jarvis
+	reverse_proxy 127.0.0.1:3020
+}
