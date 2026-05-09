@@ -20,3 +20,7 @@ mise install
 # Expose mise-installed tools (node, npm, ...) to later install steps in this
 # same bootstrap run. .zshrc's `mise activate` only fires in interactive shells.
 export PATH="$HOME/.local/share/mise/shims:$PATH"
+
+# Corepack ships with Node and auto-installs pnpm/yarn per-project from each
+# repo's package.json `packageManager` field. Idempotent.
+command -v corepack >/dev/null && corepack enable
