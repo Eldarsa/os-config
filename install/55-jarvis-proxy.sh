@@ -40,6 +40,19 @@ tmp_caddyfile=$(mktemp)
 trap 'rm -f "$tmp_caddyfile"' EXIT
 sed "s|__HOST__|$HOST|g" "$REPO_DIR/jarvis-proxy/Caddyfile.tmpl" > "$tmp_caddyfile"
 
+# Cert refresh script + systemd units (must exist before we can fetch the cert
+# below or validate the Caddyfile, which references the cert paths).
+sudo install -m 0755 "$REPO_DIR/jarvis-proxy/refresh-tailscale-cert.sh" \
+  /usr/local/bin/refresh-tailscale-cert.sh
+sudo install -m 0644 "$REPO_DIR/jarvis-proxy/caddy-tailscale-cert.service" \
+  /etc/systemd/system/caddy-tailscale-cert.service
+sudo install -m 0644 "$REPO_DIR/jarvis-proxy/caddy-tailscale-cert.timer" \
+  /etc/systemd/system/caddy-tailscale-cert.timer
+
+# Initial cert. Caddy validation provisions the full config (loads certs etc),
+# so the cert must exist on disk before we can validate.
+sudo /usr/local/bin/refresh-tailscale-cert.sh
+
 # Validate before installing — bad config shouldn't replace good config.
 # `--adapter caddyfile` is required when validating via --config, since Caddy
 # can't infer the format from the temp filename.
@@ -49,17 +62,6 @@ if ! sudo caddy validate --adapter caddyfile --config "$tmp_caddyfile" >/dev/nul
   return 1 2>/dev/null || exit 1
 fi
 sudo install -m 0644 -D "$tmp_caddyfile" /etc/caddy/Caddyfile
-
-# Cert refresh script + systemd units.
-sudo install -m 0755 "$REPO_DIR/jarvis-proxy/refresh-tailscale-cert.sh" \
-  /usr/local/bin/refresh-tailscale-cert.sh
-sudo install -m 0644 "$REPO_DIR/jarvis-proxy/caddy-tailscale-cert.service" \
-  /etc/systemd/system/caddy-tailscale-cert.service
-sudo install -m 0644 "$REPO_DIR/jarvis-proxy/caddy-tailscale-cert.timer" \
-  /etc/systemd/system/caddy-tailscale-cert.timer
-
-# Initial cert (so caddy can start cleanly on a fresh box).
-sudo /usr/local/bin/refresh-tailscale-cert.sh
 
 # Enable + reload.
 sudo systemctl daemon-reload
