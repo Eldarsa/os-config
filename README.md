@@ -38,6 +38,7 @@ install/              # modular setup steps, numbered by category
   45-lazygit.sh       # lazygit from upstream
   50-claude-code.sh   # Claude Code via npm + user-level config link
   55-jarvis-proxy.sh  # Caddy HTTPS reverse proxy fronting all dev servers
+  57-playwright-deps.sh  # apt libs Playwright's Chromium needs to launch
   60-claude-skills.sh # skills declared in skills.list, installed via skills CLI
 jarvis-proxy/         # Caddy config, cert refresh, port registry — see its README
 dotfiles/             # files symlinked into $HOME
