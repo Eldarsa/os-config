@@ -41,9 +41,11 @@ trap 'rm -f "$tmp_caddyfile"' EXIT
 sed "s|__HOST__|$HOST|g" "$REPO_DIR/jarvis-proxy/Caddyfile.tmpl" > "$tmp_caddyfile"
 
 # Validate before installing — bad config shouldn't replace good config.
-if ! sudo caddy validate --config "$tmp_caddyfile" >/dev/null 2>&1; then
+# `--adapter caddyfile` is required when validating via --config, since Caddy
+# can't infer the format from the temp filename.
+if ! sudo caddy validate --adapter caddyfile --config "$tmp_caddyfile" >/dev/null 2>&1; then
   err "rendered Caddyfile failed validation:"
-  sudo caddy validate --config "$tmp_caddyfile" || true
+  sudo caddy validate --adapter caddyfile --config "$tmp_caddyfile" || true
   return 1 2>/dev/null || exit 1
 fi
 sudo install -m 0644 -D "$tmp_caddyfile" /etc/caddy/Caddyfile
