@@ -62,6 +62,7 @@
       "Bash(false:*)",
       "Bash(rm:*)",
       "Bash(rmdir:*)",
+      "mcp__claude_ai_Slack__*",
       "mcp__plugin_sentry_sentry__*"
     ],
     "defaultMode": "default"
@@ -73,7 +74,8 @@
     "superpowers@claude-plugins-official": true,
     "neon@claude-plugins-official": true
   },
-  "effortLevel": "high",
+  "effortLevel": "xhigh",
   "skipDangerousModePermissionPrompt": true,
+  "theme": "dark",
   "skipAutoPermissionPrompt": true
 }
