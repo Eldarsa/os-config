@@ -20,5 +20,6 @@ fi
 # own CLAUDE.md / .mcp.json — not here.
 link_dotfile .claude/settings.json .claude/settings.json
 link_dotfile .claude/CLAUDE.md     .claude/CLAUDE.md
+link_dotfile .claude/skills.list   .claude/skills.list
 
 log "first 'claude' run will prompt you to authenticate"
