@@ -8,7 +8,11 @@
 
 {
 	auto_https off
-	admin off
+	# Admin API bound to localhost only — required for `caddy reload` to push
+	# new config to the running daemon. Not exposed to the tailnet because the
+	# ufw default-deny + Hetzner firewall both block public access; only shell
+	# users on jarvis can reach it.
+	admin localhost:2019
 }
 
 (tls_jarvis) {

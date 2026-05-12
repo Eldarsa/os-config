@@ -75,7 +75,10 @@ sudo install -m 0644 -D "$tmp_caddyfile" /etc/caddy/Caddyfile
 # Enable + reload.
 sudo systemctl daemon-reload
 sudo systemctl enable --now caddy >/dev/null
-sudo systemctl reload caddy
+# reload-or-restart: reload via admin API when possible (preserves live
+# connections); restart as a fallback when admin endpoint isn't reachable
+# (e.g. first boot, or transitioning from `admin off` to `admin localhost`).
+sudo systemctl reload-or-restart caddy
 sudo systemctl enable --now caddy-tailscale-cert.timer >/dev/null
 
 link_dotfile .local/bin/jarvis-status .local/bin/jarvis-status
