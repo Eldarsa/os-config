@@ -14,7 +14,11 @@ when accessing dev URLs from other tailnet devices (laptop, phone, iPad).
 | `caddy-tailscale-cert.service` + `.timer` | `/etc/systemd/system/` | Daily renewal check + 2 min after boot. |
 | `PORTS.md` | (just docs) | Source of truth for port assignments. Edit when adding a project. |
 
-## Adding a new project
+## Adding a project
+
+Two paths, pick the one that fits.
+
+### Canonical project (long-lived, you own it)
 
 1. Pick a free port from `PORTS.md` (3000–8999, **not** a framework default).
 2. Add a block to `Caddyfile.tmpl`:
@@ -27,6 +31,30 @@ when accessing dev URLs from other tailnet devices (laptop, phone, iPad).
 3. Update the table in `PORTS.md`.
 4. Re-run bootstrap: `cd ~/os-config && ./bootstrap.sh` (idempotent), or
    just `sudo systemctl reload caddy` if you only edited the Caddyfile.
+
+### Ephemeral / external project (forks, demos, not really yours)
+
+Drop a `caddy.frag` file at the repo root:
+
+```caddy
+jarvis.<tailnet>.ts.net:1XXXX {
+    import tls_jarvis
+    reverse_proxy 127.0.0.1:XXXX
+}
+```
+
+Then `sudo systemctl reload caddy`. The rendered Caddyfile globs
+`/home/eldar/code/*/caddy.frag` and absorbs every matching file — no
+os-config edit required. Removing the project = delete the frag and
+reload.
+
+Notes:
+- Use a port outside the canonical range to avoid collisions (`PORTS.md`
+  tracks the canonical ones).
+- The `tls_jarvis` snippet is defined in the main Caddyfile and is
+  visible from imported frags.
+- One broken frag fails Caddy reload for *all* sites. Run
+  `sudo caddy validate --config /etc/caddy/Caddyfile` after editing.
 
 ## Diagnostics
 

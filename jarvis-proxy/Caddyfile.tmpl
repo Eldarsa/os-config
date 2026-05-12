@@ -64,3 +64,18 @@ __HOST__:13020 {
 	import tls_jarvis
 	reverse_proxy 127.0.0.1:3020
 }
+
+# ───────── per-project frags ─────────
+# Repos in ~/code/ can self-register an HTTPS proxy by dropping a
+# `caddy.frag` file at their root. Use this for ephemeral, external,
+# or not-yet-canonical projects — canonical long-lived projects stay
+# in this template + PORTS.md.
+#
+# Example: /home/eldar/code/myrepo/caddy.frag
+#   jarvis.<tailnet>.ts.net:1XXXX {
+#     import tls_jarvis
+#     reverse_proxy 127.0.0.1:XXXX
+#   }
+#
+# After adding/removing a frag: `sudo systemctl reload caddy`.
+import /home/eldar/code/*/caddy.frag

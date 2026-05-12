@@ -9,8 +9,11 @@ public-trust cert tailscale issues for `<host>.<tailnet>.ts.net`.
 - Every dev service pins a unique port in **3000–8999** in its repo's `dev` script.
 - Default ports (3000, 8000, 8080) are forbidden — they collide.
 - The HTTPS proxy port is always **local + 10000**. No exceptions.
-- Adding a new project: pick the next free port from this table, add a block to
-  `Caddyfile.tmpl`, re-run `bootstrap.sh` (or `sudo systemctl reload caddy`).
+- Adding a canonical project: pick the next free port from this table, add a block
+  to `Caddyfile.tmpl`, re-run `bootstrap.sh` (or `sudo systemctl reload caddy`).
+- Ephemeral / external projects skip this table — they drop a `caddy.frag` at
+  their repo root and Caddy globs it in. See `README.md` → "Adding a project".
+  Pick an obscure port outside this table's range.
 
 ## Registry
 

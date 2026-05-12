@@ -35,6 +35,15 @@ if [ -z "$HOST" ] || [ "$HOST" = "null" ]; then
 fi
 log "configuring jarvis-proxy for $HOST"
 
+# Allow the `caddy` user to traverse $HOME so it can resolve per-project
+# frag imports under ~/code/*/caddy.frag. Adds the `x` bit for `other`
+# without granting read access; sensitive subdirs (.ssh, .gnupg, etc.)
+# keep their own restrictive permissions.
+if [ "$(stat -c '%a' "$HOME")" != "751" ] && [ "$(stat -c '%a' "$HOME")" != "755" ]; then
+  log "making $HOME traversable by caddy (chmod o+x)"
+  chmod o+x "$HOME"
+fi
+
 # Render Caddyfile from template.
 tmp_caddyfile=$(mktemp)
 trap 'rm -f "$tmp_caddyfile"' EXIT
