@@ -18,6 +18,10 @@ sudo ufw default allow outgoing >/dev/null
 # ufw detects existing equivalent rules and skips silently — fully idempotent.
 sudo ufw limit 22/tcp comment 'SSH (rate-limited)' >/dev/null
 
+# Mosh UDP range — survives laptop sleep / network drops where SSH can't.
+# Hetzner Cloud Firewall must also allow this range for public-IP connections.
+sudo ufw allow 60000:61000/udp comment 'mosh' >/dev/null
+
 # Trust the Tailscale interface fully — your tailnet is private by design.
 # Rule is preserved even if tailscale0 doesn't exist yet; activates when it does.
 sudo ufw allow in on tailscale0 comment 'tailscale' >/dev/null

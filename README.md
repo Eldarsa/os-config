@@ -126,7 +126,7 @@ Some things can't be (or shouldn't be) automated. Do these once:
 | **Enable HTTPS certs on the tailnet** | Tailscale admin console → DNS → "HTTPS Certificates" → Enable. Required for jarvis-proxy. One-time per tailnet. |
 | **Authenticate Claude Code** | First `claude` run needs OAuth. SSH into the VPS with `LocalForward` for the OAuth port (laptop-side `~/.ssh/config`), then run `claude` and complete login in your laptop browser. |
 | **Tmux plugins** | First tmux launch: `prefix + I` to install plugins via tpm. |
-| **Hetzner Cloud Firewall** | Configure in Hetzner Console: allow `22/tcp` and ICMP inbound, deny everything else. ufw is the inner layer; Hetzner is the outer. |
+| **Hetzner Cloud Firewall** | Configure in Hetzner Console: allow `22/tcp`, `60000-61000/udp` (mosh), and ICMP inbound, deny everything else. ufw is the inner layer; Hetzner is the outer. |
 | **Fill in `~/.claude/CLAUDE.md`** | The default is a placeholder. Add your real preferences. |
 
 ## Workflow notes
