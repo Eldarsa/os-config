@@ -22,4 +22,9 @@ link_dotfile .claude/settings.json .claude/settings.json
 link_dotfile .claude/CLAUDE.md     .claude/CLAUDE.md
 link_dotfile .claude/skills.list   .claude/skills.list
 
+# Authored skills (one symlink per skill, so registry-installed skills in
+# ~/.claude/skills/ can coexist).
+mkdir -p "$HOME/.claude/skills"
+link_dotfile .claude/skills/jarvis-check-error-reports .claude/skills/jarvis-check-error-reports
+
 log "first 'claude' run will prompt you to authenticate"
