@@ -32,7 +32,6 @@ public-trust cert tailscale issues for `<host>.<tailnet>.ts.net`.
 | bday | 3030 | 13030 | Next.js (via `caddy.frag`) |
 | wedding-card | 3031 | 13031 | Next.js (via `caddy.frag`) |
 | gamevault | 3040 | 13040 | Next.js (via `caddy.frag`; was default 3000) |
-| my-app | 3041 | 13041 | Next.js (via `caddy.frag`; was default 3000) |
 | venturetime | 3050 | 13050 | Next.js (via `caddy.frag`) |
 | dugnadsservice | 3060 | 13060 | Next.js (via `caddy.frag`; was default 3000) |
 
