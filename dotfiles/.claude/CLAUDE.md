@@ -41,3 +41,10 @@ If you've already created an unnecessary branch, surface that you did and offer 
 When uncertain — especially with Co-Authored-By trailers from other sessions/agents — **ask before merging**, don't guess.
 
 `gh repo view --json mergeCommitAllowed,squashMergeAllowed,rebaseMergeAllowed` tells you what's permitted; the criteria above tell you what's right.
+
+## Machine-wide agent notes (jarvis)
+
+Dev servers, Tailscale/Caddy preview URLs, and port conventions on this
+machine — shared with all agents (canonical file lives at ~/.codex/AGENTS.md):
+
+@~/.codex/AGENTS.md
