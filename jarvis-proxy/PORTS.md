@@ -22,12 +22,25 @@ public-trust cert tailscale issues for `<host>.<tailnet>.ts.net`.
 | labelit web | 4070 | 14070 | Next.js |
 | labelit backend | 4071 | 14071 | Bun/Hono |
 | labelit promo | 4080 | 14080 | Next.js |
+| wall-club | 4090 | 14090 | Next.js (poster app; Fal webhook origin; via `caddy.frag`) |
 | controlroom | 4000 | 14000 | Next.js |
 | pikazo web | 3070 | 13070 | Next.js |
 | pikazo backend | 8050 | 18050 | Bun/Hono |
 | Morolapper | 3010 | 13010 | Next.js (was 3000 — renumbered to free up the default) |
 | Morolapper backend | 3100 | 13100 | Python/uvicorn (Docker) |
 | nevy | 3020 | 13020 | Next.js (was 3000 — renumbered) |
+| bday | 3030 | 13030 | Next.js (via `caddy.frag`) |
+| wedding-card | 3031 | 13031 | Next.js (via `caddy.frag`) |
+| gamevault | 3040 | 13040 | Next.js (via `caddy.frag`; was default 3000) |
+| my-app | 3041 | 13041 | Next.js (via `caddy.frag`; was default 3000) |
+| venturetime | 3050 | 13050 | Next.js (via `caddy.frag`) |
+| dugnadsservice | 3060 | 13060 | Next.js (via `caddy.frag`; was default 3000) |
+
+## Infrastructure ports (not dev servers, no proxy)
+
+| Service | Port | Notes |
+|---|---|---|
+| Orca remote server | 6768 | `orca-serve.service` (systemd user unit); tailnet clients connect directly, do not proxy or reuse |
 
 ## URL convention
 
