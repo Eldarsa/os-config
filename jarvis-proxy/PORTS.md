@@ -26,6 +26,7 @@ public-trust cert tailscale issues for `<host>.<tailnet>.ts.net`.
 | controlroom | 4000 | 14000 | Next.js |
 | pikazo web | 3070 | 13070 | Next.js |
 | pikazo backend | 8050 | 18050 | Bun/Hono |
+| pikazo v2 | 3080 | 13080 | Next.js (via `caddy.frag`) |
 | Morolapper | 3010 | 13010 | Next.js (was 3000 — renumbered to free up the default) |
 | Morolapper backend | 3100 | 13100 | Python/uvicorn (Docker) |
 | nevy | 3020 | 13020 | Next.js (was 3000 — renumbered) |
