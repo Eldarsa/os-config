@@ -19,6 +19,14 @@
 	tls /var/lib/caddy/jarvis.crt /var/lib/caddy/jarvis.key
 }
 
+# ⚠️ DEFAULT for per-project entries is a `caddy.frag` in the project repo
+# (auto-imported by the glob at the bottom of this file) — it needs only
+# `sudo systemctl reload caddy`, no edit here and no render. Add a block to THIS
+# template ONLY if you deliberately want it in the rendered base config, and note
+# it takes effect only after re-rendering via `./bootstrap.sh` (a plain reload
+# won't pick it up). NEVER have both a template block and a caddy.frag for the
+# same port — Caddy fails on the duplicate site address.
+
 # ───────── labelit ─────────
 __HOST__:14070 {
 	import tls_jarvis
