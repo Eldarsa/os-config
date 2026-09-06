@@ -146,6 +146,14 @@ Some things can't be (or shouldn't be) automated. Do these once:
 - **mise + direnv** together make per-project state automatic: mise switches
   Node/Python versions on `cd`, direnv loads env vars from `.envrc` (or `.env`
   via the `dotenv_if_exists` helper).
+- **Agent instructions live in `AGENTS.md`** in each repo — the cross-agent
+  convention read by Codex, GLM, and friends. `CLAUDE.md` is a one-line stub
+  containing `@AGENTS.md` (Claude Code's import syntax) so Claude sees the same
+  rules. Never maintain the two as separate files — they drift. New repos:
+  write `AGENTS.md`, then `printf '@AGENTS.md\n' > CLAUDE.md`.
+- **Orca** (`orca-serve.service`, port 6768) is the default workspace manager —
+  worktrees under `~/orca/workspaces/`, agents authenticated server-side
+  (`orca-ide account list`). tmux is break-glass fallback only.
 - **Firewall model**: public surface = SSH only. Tailscale interface is
   trusted. Dev servers binding to `0.0.0.0` are reachable via Tailscale but
   invisible to the public internet.
