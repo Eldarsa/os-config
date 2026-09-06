@@ -1,0 +1,11 @@
+[Unit]
+Description=Orca remote server (headless)
+After=network-online.target tailscaled.service
+
+[Service]
+ExecStart=/usr/bin/orca-ide serve --port 6768 --pairing-address 100.96.190.13 --mobile-pairing
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=default.target
