@@ -41,6 +41,7 @@ public-trust cert tailscale issues for `<host>.<tailnet>.ts.net`.
 | Service | Port | Notes |
 |---|---|---|
 | Orca remote server | 6768 | `orca-serve.service` (systemd user unit); tailnet clients connect directly, do not proxy or reuse |
+| T3 Code server | 3773 | `t3code.service` (systemd user unit); binds 127.0.0.1 only, port is T3's fixed default (launcher takes no flags) — do NOT assign 3773 to a dev server. Proxied at **13773** (exception to "infra = no proxy": mobile apps + app.t3.codes need HTTPS). Worktrees live in `~/.t3/worktrees` |
 
 ## URL convention
 

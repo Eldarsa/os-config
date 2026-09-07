@@ -77,6 +77,15 @@ __HOST__:13020 {
 	reverse_proxy 127.0.0.1:3020
 }
 
+# ───────── T3 Code (infra) ─────────
+# t3code.service (systemd user unit) binds loopback-only on its default port
+# 3773 and its launcher accepts no host/port flags, so this proxy is the sole
+# remote path. HTTPS is required by the mobile apps and app.t3.codes.
+__HOST__:13773 {
+	import tls_jarvis
+	reverse_proxy 127.0.0.1:3773
+}
+
 # ───────── per-project frags ─────────
 # Repos in ~/code/ can self-register an HTTPS proxy by dropping a
 # `caddy.frag` file at their root. Use this for ephemeral, external,
