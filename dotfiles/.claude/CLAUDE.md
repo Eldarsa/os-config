@@ -26,9 +26,13 @@ If you've already created an unnecessary branch, surface that you did and offer 
 
 **Orca worktrees are not a violation of this policy.** On machines using Orca (e.g. jarvis), a worktree per task — each with its own branch — is the intended workflow. The rule translates as: one continuous effort = one worktree = one branch. Follow-ups, hotfixes, and deeper redos of that effort go in the *same* worktree on the *same* branch; don't spawn a new child worktree for what is really a follow-up.
 
-### Verify PR/branch state before claiming it
+### Never assume ANY git state from memory — verify it first
 
-**Never state a PR's or branch's status (open, merged, closed, ahead/behind) from memory or conversation context — check it first** (`gh pr view <n> --json state,mergedAt`, `git fetch` + `git rev-list`). Repos change between turns and between sessions: PRs get merged from the GitHub UI, branches get deleted on merge, checkouts get switched. A stale claim ("#48 is still open") leads to wrong plans and wasted work. This applies before ANY recommendation that depends on repo state — merge orders, deploy sequencing, "you still need to merge X". Checking costs one command; being wrong costs a re-plan.
+Canonical rule lives in the machine-wide agent notes imported below (so
+Codex, GLM, and other agents get it too). Short form: never assert PR
+status, branch existence/position, checked-out branch, default branch, or
+working-tree state from memory — run the check first (`gh pr view`,
+`git fetch` + `git rev-list`, `git ls-remote`, `git status`).
 
 ### Merge strategy for PRs
 
@@ -44,7 +48,8 @@ When uncertain — especially with Co-Authored-By trailers from other sessions/a
 
 ## Machine-wide agent notes (jarvis)
 
-Dev servers, Tailscale/Caddy preview URLs, and port conventions on this
-machine — shared with all agents (canonical file lives at ~/.codex/AGENTS.md):
+Cross-agent rules (git-state verification) plus dev servers, Tailscale/Caddy
+preview URLs, and port conventions on this machine — shared with all agents
+(canonical file lives at ~/.codex/AGENTS.md):
 
 @~/.codex/AGENTS.md
